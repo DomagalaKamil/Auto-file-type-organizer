@@ -1,8 +1,9 @@
 from pathlib import Path
 import shutil
 
-# CHANGE THIS PATH
-SOURCE_DIR = Path("C:/Users/Domag/Desktop/Automatic Sort Test/")
+# Update this path if the target files are located outside the test folder
+SOURCE_DIR = Path("/Automatic Sort Test/")
+# Temporary file 
 FILE_TYPES_TXT = SOURCE_DIR / "fileTypes.txt"
 
 # STEP 1: Detect file types
@@ -10,10 +11,13 @@ file_types = set()
 
 for item in SOURCE_DIR.iterdir():
     if item.is_file():
+        # Skip fileTypes.txt completely
+        if item.name == FILE_TYPES_TXT.name:
+            continue
+
         ext = item.suffix.lower()
         if ext:
             file_types.add(ext)
-
 
 # STEP 2: Save to fileTypes.txt
 with open(FILE_TYPES_TXT, "w") as f:
@@ -32,7 +36,10 @@ for ext in types_from_file:
 
 # STEP 5: Move files
 for item in SOURCE_DIR.iterdir():
-    if item.is_file() and item.name != FILE_TYPES_TXT.name:
+    if item.is_file():
+        if item.name == FILE_TYPES_TXT.name:
+            continue
+
         ext = item.suffix.lower()
         if ext in types_from_file:
             destination = SOURCE_DIR / f"Files Type {ext[1:]}" / item.name
